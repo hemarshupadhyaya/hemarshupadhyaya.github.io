@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hemarsh Upadhyaya</title>
+    <meta name="description" content="Building trusted digital products for pharmaceutical R&D. AI reliability, data integrity, and GxP-validated workflows.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --text-primary: #1a1a1a;
+            --text-secondary: #555;
+            --text-tertiary: #888;
+            --bg: #fafaf8;
+            --accent: #2c5f2d;
+            --accent-light: #e8f0e8;
+            --border: #e0ddd8;
+            --card-bg: #fff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-primary: #e8e6e1;
+                --text-secondary: #a8a49e;
+                --text-tertiary: #706c66;
+                --bg: #141311;
+                --accent: #7fb87f;
+                --accent-light: #1e2a1e;
+                --border: #2a2825;
+                --card-bg: #1c1a17;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 400;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 80px 24px 120px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 48px 20px 80px;
+            }
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 64px;
+        }
+
+        .header h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .header .tagline {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            max-width: 540px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 56px;
+        }
+
+        .section-label {
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            margin-bottom: 20px;
+        }
+
+        /* About */
+        .about p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .about p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Now section */
+        .now-content {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .now-content p {
+            margin-bottom: 12px;
+        }
+
+        .now-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Projects */
+        .project {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 16px;
+            background: var(--card-bg);
+            transition: border-color 0.2s ease;
+        }
+
+        .project:hover {
+            border-color: var(--accent);
+        }
+
+        .project:last-child {
+            margin-bottom: 0;
+        }
+
+        .project-name {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .project-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .project-tag {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            color: var(--accent);
+            background: var(--accent-light);
+            padding: 3px 10px;
+            border-radius: 4px;
+            margin-right: 6px;
+        }
+
+        .project a {
+            display: inline-block;
+            font-size: 0.82rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 12px;
+            transition: opacity 0.2s ease;
+        }
+
+        .project a:hover {
+            opacity: 0.7;
+        }
+
+        .coming-soon {
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* Separator */
+        .separator {
+            width: 40px;
+            height: 1px;
+            background: var(--border);
+            margin: 56px 0;
+        }
+
+        /* Connect */
+        .connect-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .connect-links a {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .connect-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 80px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer p {
+            font-size: 0.78rem;
+            color: var(--text-tertiary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <header class="header">
+            <h1>Hemarsh Upadhyaya</h1>
+            <p class="tagline">I build trusted digital products for pharmaceutical R&D, with a focus on AI reliability, data integrity, and GxP-validated workflows.</p>
+        </header>
+
+        <section class="section about">
+            <div class="section-label">About</div>
+            <p>I spent nine years in analytical R&D, working on method development and validation for complex injectables. I later taught myself SQL and Python and moved into digital product work, where I now lead the development of validated reporting and analytics products used across global pharmaceutical teams.</p>
+            <p>The thing I care most about is building systems that scientists actually trust enough to use, and that can withstand scrutiny when it matters. Most of my work sits at the intersection of product design, data engineering, and regulatory thinking.</p>
+            <p>Right now I am focused on AI in regulated environments, specifically the question of how you make AI outputs trustworthy enough for regulated scientific decisions.</p>
+        </section>
+
+        <section class="section">
+            <div class="section-label">Now</div>
+            <div class="now-content">
+                <p>Building AI-powered features for a pharmaceutical data platform, including conversational agents, LLM evaluations, and AI-integrated workflows in regulated contexts.</p>
+                <p>Exploring AI reliability and trust infrastructure for scientific content and decision support.</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-label">Projects</div>
+            <p class="coming-soon">Public projects coming soon.</p>
+            <!--
+            <div class="project">
+                <div class="project-name">Project Name</div>
+                <p class="project-desc">A brief description of what this project does and why it matters.</p>
+                <span class="project-tag">Python</span>
+                <span class="project-tag">AI Reliability</span>
+                <br>
+                <a href="#">View on GitHub &rarr;</a>
+            </div>
+            -->
+        </section>
+
+        <div class="separator"></div>
+
+        <section class="section">
+            <div class="section-label">Connect</div>
+            <div class="connect-links">
+                <a href="https://www.linkedin.com/in/hemarsh/" target="_blank" rel="noopener">LinkedIn</a>
+                <a href="https://github.com/hemarshupadhyaya" target="_blank" rel="noopener">GitHub</a>
+                <a href="https://x.com/HemarshU" target="_blank" rel="noopener">X</a>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>Views expressed here are my own and not those of my employer.</p>
+        </footer>
+
+    </div>
+</body>
+</html>
