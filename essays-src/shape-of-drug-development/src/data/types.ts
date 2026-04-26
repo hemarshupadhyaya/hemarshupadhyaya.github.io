@@ -8,20 +8,27 @@ export interface DataSnapshot {
 }
 
 export interface ApprovalTrendRow {
-  year: number;
-  approvals: number;
+  approval_year: number;
+  total_approvals: number;
 }
 
 export interface ApplicationTypeRow {
-  year: number;
-  application_type: string;
-  approvals: number;
+  approval_year: number;
+  total_approvals: number;
+  nda_count: number;
+  bla_count: number;
+  unknown_count: number;
 }
 
 export interface ExpeditedPathwayRow {
-  year: number;
-  pathway: string;
-  count: number;
+  approval_year: number;
+  total_approvals: number;
+  fast_track_count: number;
+  breakthrough_therapy_count: number;
+  accelerated_approval_count: number;
+  priority_review_count: number;
+  qualified_infectious_disease_product_count: number;
+  any_expedited_pathway_count: number;
 }
 
 export interface TherapeuticAreaCountRow {
@@ -30,7 +37,7 @@ export interface TherapeuticAreaCountRow {
 }
 
 export interface DosageFormRow {
-  year: number;
+  approval_year: number;
   dosage_form: string;
   count: number;
 }

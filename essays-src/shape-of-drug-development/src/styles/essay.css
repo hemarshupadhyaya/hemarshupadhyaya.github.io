@@ -140,6 +140,35 @@
   text-align: center;
 }
 
+.chart {
+  margin-top: var(--space-4);
+  width: 100%;
+  min-height: 220px;
+}
+
+.chart svg {
+  display: block;
+  overflow: visible;
+}
+
+.chart[aria-busy='true'] {
+  opacity: 0.5;
+}
+
+.section {
+  transition: opacity 0.4s ease;
+}
+
+.section.is-active h2 {
+  color: var(--text-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section {
+    transition: none;
+  }
+}
+
 .separator {
   width: 40px;
   height: 1px;
