@@ -8,24 +8,6 @@ interface Stub {
 
 const stubs: Stub[] = [
   {
-    id: 'therapeutic-areas',
-    label: 'Section 4',
-    title: 'Where approvals cluster',
-    body: `Approvals cluster around the diseases the science can reach.
-      Oncology, infectious disease, and rare disorders dominate recent years —
-      but the picture changes over five-year windows.`,
-    chartNote: 'Coming in Phase 3: therapeutic area ranking and 5-year heatmap.'
-  },
-  {
-    id: 'dosage-forms',
-    label: 'Section 5',
-    title: 'How they are delivered',
-    body: `Drug development is not just about molecules — it is about how
-      patients receive them. Tablet, injection, infusion, inhaler.
-      The dosage and route mix tells its own story.`,
-    chartNote: 'Coming in Phase 3: dosage form and route trends.'
-  },
-  {
     id: 'recent-years',
     label: 'Section 6',
     title: 'The latest cohort',

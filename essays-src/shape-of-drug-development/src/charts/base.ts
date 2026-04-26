@@ -25,6 +25,7 @@ export interface ResponsiveOptions {
   aspect?: number;
   minHeight?: number;
   maxHeight?: number;
+  mobileViewportCap?: boolean;
 }
 
 export function createResponsiveSvg(
@@ -33,11 +34,22 @@ export function createResponsiveSvg(
 ): ResponsiveSvg {
   const margin = options.margin ?? defaultMargin;
   const aspect = options.aspect ?? 0.5;
-  const minHeight = options.minHeight ?? 220;
+  const minHeight = options.minHeight ?? 200;
   const maxHeight = options.maxHeight ?? 360;
 
   const width = Math.max(280, container.clientWidth || 600);
-  const height = Math.min(maxHeight, Math.max(minHeight, width * aspect));
+  // On narrow viewports, cap height to ~42% of viewport so a sticky chart
+  // does not eat the screen and leaves room for the reading column.
+  const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
+  const stickyCap =
+    options.mobileViewportCap !== false && window.matchMedia('(max-width: 899px)').matches
+      ? vh * 0.42
+      : Infinity;
+  const height = Math.min(
+    maxHeight,
+    stickyCap,
+    Math.max(minHeight, width * aspect)
+  );
 
   select(container).select('svg').remove();
 

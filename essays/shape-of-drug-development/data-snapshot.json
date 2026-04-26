@@ -2,7 +2,20 @@
   "source_repo": "https://github.com/hemarshupadhyaya/shape-of-drug-development-data-clean.git",
   "source_branch": "main",
   "source_commit": "8c8d6945f3eeaa78f15dcdbc12ada9008c2d12f2",
-  "synced_at": "2026-04-26T13:55:03Z",
-  "data_year_range": "1985–2026 YTD",
-  "notes": "2026 rows are provisional until FDA publishes final CY2026 annual report. Refresh with scripts/sync-shape-data.sh."
+  "synced_at": "2026-04-26T16:22:21Z",
+  "data_year_range": "1985-2026 YTD",
+  "notes": "2026 rows are provisional until FDA publishes final CY2026 annual report. Refresh with scripts/sync-shape-data.sh.",
+  "files": {
+    "approval_trends_by_year.json": { "sha256": "a35848d05ef1f6ff37a24be9ccf1755cf83743d4640ee4b56ac74b373ae4d542" },
+    "approvals_by_application_type_by_year.json": { "sha256": "8ea20e0333bea81e26007e22ab9ef57cbaf499cc4a4f7c69080b56a93028a907" },
+    "expedited_pathways_by_year.json": { "sha256": "108aeda53d8fda9679a94f15b2de87fa3092cd42c03562e8febff63824dfbf03" },
+    "fda_nme_approvals_clean.json": { "sha256": "dd9e3a9e0ce50771f4e5aacda730737cce49d0f69944ab6296f9bdc4d4876648" },
+    "orphan_drug_trends_by_year.json": { "sha256": "cea1a8975a4e97080d44453360d9edbfe33b4806c1bc4311827676a953a555d6" },
+    "first_in_class_by_year.json": { "sha256": "183262f24e3942ef14e817c756e40ab540b55dd5a70fd45d8d11909ad9c80f34" },
+    "therapeutic_area_counts.json": { "sha256": "28b5a7873e881e3e50245f0f0f223ef2bcbad73179fe13f858364b3626c91c21" },
+    "therapeutic_area_by_period.json": { "sha256": "93885ed54ad6463ae0aab74d2ac8de95631b0f858e29b4dce485ba725447ea48" },
+    "therapeutic_area_heatmap_by_5yr_period.json": { "sha256": "feb187000480cc1a9fae6ae32d072e7a1d568d5aa516d7d0f063f4f2f768d839" },
+    "dosage_form_trends_by_year.json": { "sha256": "6f0df321558d067306a78fe39233b36efe30342e7c21a7938119efa5867a5e0e" },
+    "fda_nme_approvals_with_therapeutic_area.json": { "sha256": "9d4299d0336b0fd11aabe3de594fcb687f70537571a203922dc6fc0a4e25c595" }
+  }
 }

@@ -33,11 +33,19 @@ export interface ExpeditedPathwayRow {
 
 export interface TherapeuticAreaCountRow {
   therapeutic_area: string;
-  count: number;
+  total_approvals: number;
+}
+
+export interface TherapeuticAreaPeriodRow {
+  period: string;
+  therapeutic_area: string;
+  total_approvals: number;
+  manual_review_count?: number;
+  mean_confidence?: number;
 }
 
 export interface DosageFormRow {
   approval_year: number;
   dosage_form: string;
-  count: number;
+  total_approvals: number;
 }

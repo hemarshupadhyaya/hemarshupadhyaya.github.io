@@ -4,6 +4,24 @@
   padding: 80px 24px 120px;
 }
 
+.essay > .section.scrolly {
+  max-width: var(--measure-wide);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 900px) {
+  /* Let scrolly sections expand wider than the prose measure. */
+  .essay {
+    max-width: var(--measure-wide);
+  }
+  .essay > *:not(.section.scrolly):not(.separator) {
+    max-width: var(--measure);
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 @media (max-width: 480px) {
   .essay {
     padding: 48px 20px 80px;
@@ -161,6 +179,101 @@
 
 .section.is-active h2 {
   color: var(--text-primary);
+}
+
+/* ---------- Scrolly section ---------- */
+
+.scrolly-header {
+  margin-bottom: var(--space-4);
+}
+
+.scrolly-grid {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--space-3);
+}
+
+.scrolly-narrative .step {
+  padding: 18vh 0;
+  transition: opacity 0.3s ease;
+  opacity: 0.55;
+}
+
+.scrolly-narrative .step.is-step-active {
+  opacity: 1;
+}
+
+.scrolly-narrative .step:first-child {
+  padding-top: var(--space-3);
+}
+
+.scrolly-narrative .step:last-child {
+  padding-bottom: var(--space-5);
+}
+
+.scrolly-narrative .step p {
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.scrolly-narrative .step strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.scrolly-chart-wrap {
+  position: sticky;
+  top: 0;
+  margin-top: var(--space-3);
+  padding: var(--space-2) 0 var(--space-3);
+  background: var(--bg);
+  z-index: 1;
+}
+
+/* Soft fade at the bottom so steps appear to scroll *under* the sticky chart
+   on mobile. Subtle on desktop. */
+.scrolly-chart-wrap::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -16px;
+  height: 16px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--bg), transparent);
+}
+
+@media (min-width: 900px) {
+  .scrolly-grid {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(420px, 1.2fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+  .scrolly-chart-wrap {
+    top: 80px;
+    margin-top: 0;
+    padding-top: 0;
+    background: transparent;
+    align-self: start;
+  }
+  .scrolly-chart-wrap::after {
+    display: none;
+  }
+  .scrolly-narrative .step {
+    padding: 22vh 0;
+  }
+  .scrolly-narrative .step:first-child {
+    padding-top: var(--space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrolly-narrative .step {
+    transition: none;
+    opacity: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
