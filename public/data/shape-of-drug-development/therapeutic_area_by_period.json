@@ -1,0 +1,367 @@
+[
+  {
+    "period": "1985-1989",
+    "therapeutic_area": "Infectious disease",
+    "total_approvals": 25
+  },
+  {
+    "period": "1985-1989",
+    "therapeutic_area": "Cardiovascular / renal",
+    "total_approvals": 23
+  },
+  {
+    "period": "1985-1989",
+    "therapeutic_area": "Other / specialty",
+    "total_approvals": 17
+  },
+  {
+    "period": "1985-1989",
+    "therapeutic_area": "Immunology / inflammation",
+    "total_approvals": 14
+  },
+  {
+    "period": "1985-1989",
+    "therapeutic_area": "Hematology",
+    "total_approvals": 13
+  },
+  {
+    "period": "1985-1989",
+    "therapeutic_area": "Oncology",
+    "total_approvals": 10
+  },
+  {
+    "period": "1985-1989",
+    "therapeutic_area": "Gastroenterology / hepatology",
+    "total_approvals": 4
+  },
+  {
+    "period": "1985-1989",
+    "therapeutic_area": "Ophthalmology",
+    "total_approvals": 4
+  },
+  {
+    "period": "1985-1989",
+    "therapeutic_area": "Respiratory / allergy",
+    "total_approvals": 4
+  },
+  {
+    "period": "1985-1989",
+    "therapeutic_area": "Urology / reproductive health",
+    "total_approvals": 3
+  },
+  {
+    "period": "1985-1989",
+    "therapeutic_area": "Endocrine / metabolic",
+    "total_approvals": 2
+  },
+  {
+    "period": "1985-1989",
+    "therapeutic_area": "Neurology",
+    "total_approvals": 2
+  },
+  {
+    "period": "1985-1989",
+    "therapeutic_area": "Psychiatry",
+    "total_approvals": 2
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Cardiovascular / renal",
+    "total_approvals": 70
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Other / specialty",
+    "total_approvals": 60
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Infectious disease",
+    "total_approvals": 56
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Oncology",
+    "total_approvals": 40
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Hematology",
+    "total_approvals": 26
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Neurology",
+    "total_approvals": 22
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Immunology / inflammation",
+    "total_approvals": 15
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Endocrine / metabolic",
+    "total_approvals": 12
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Respiratory / allergy",
+    "total_approvals": 12
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Psychiatry",
+    "total_approvals": 7
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Dermatology",
+    "total_approvals": 6
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Ophthalmology",
+    "total_approvals": 5
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Gastroenterology / hepatology",
+    "total_approvals": 4
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Urology / reproductive health",
+    "total_approvals": 4
+  },
+  {
+    "period": "1990-1999",
+    "therapeutic_area": "Genetic / inborn errors",
+    "total_approvals": 1
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Infectious disease",
+    "total_approvals": 40
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Other / specialty",
+    "total_approvals": 35
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Hematology",
+    "total_approvals": 34
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Oncology",
+    "total_approvals": 32
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Cardiovascular / renal",
+    "total_approvals": 31
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Immunology / inflammation",
+    "total_approvals": 18
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Neurology",
+    "total_approvals": 17
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Endocrine / metabolic",
+    "total_approvals": 14
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Gastroenterology / hepatology",
+    "total_approvals": 10
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Ophthalmology",
+    "total_approvals": 7
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Genetic / inborn errors",
+    "total_approvals": 6
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Psychiatry",
+    "total_approvals": 5
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Urology / reproductive health",
+    "total_approvals": 4
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Dermatology",
+    "total_approvals": 1
+  },
+  {
+    "period": "2000-2009",
+    "therapeutic_area": "Respiratory / allergy",
+    "total_approvals": 1
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Oncology",
+    "total_approvals": 76
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Infectious disease",
+    "total_approvals": 56
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Hematology",
+    "total_approvals": 49
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Other / specialty",
+    "total_approvals": 43
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Neurology",
+    "total_approvals": 33
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Cardiovascular / renal",
+    "total_approvals": 25
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Immunology / inflammation",
+    "total_approvals": 21
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Endocrine / metabolic",
+    "total_approvals": 18
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Gastroenterology / hepatology",
+    "total_approvals": 12
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Respiratory / allergy",
+    "total_approvals": 10
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Genetic / inborn errors",
+    "total_approvals": 8
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Ophthalmology",
+    "total_approvals": 8
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Psychiatry",
+    "total_approvals": 8
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Dermatology",
+    "total_approvals": 6
+  },
+  {
+    "period": "2010-2019",
+    "therapeutic_area": "Urology / reproductive health",
+    "total_approvals": 5
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Oncology",
+    "total_approvals": 57
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Other / specialty",
+    "total_approvals": 35
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Hematology",
+    "total_approvals": 31
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Infectious disease",
+    "total_approvals": 26
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Cardiovascular / renal",
+    "total_approvals": 23
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Neurology",
+    "total_approvals": 16
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Immunology / inflammation",
+    "total_approvals": 15
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Endocrine / metabolic",
+    "total_approvals": 11
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Genetic / inborn errors",
+    "total_approvals": 6
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Gastroenterology / hepatology",
+    "total_approvals": 5
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Psychiatry",
+    "total_approvals": 5
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Dermatology",
+    "total_approvals": 4
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Ophthalmology",
+    "total_approvals": 4
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Respiratory / allergy",
+    "total_approvals": 4
+  },
+  {
+    "period": "2020-2029",
+    "therapeutic_area": "Urology / reproductive health",
+    "total_approvals": 3
+  }
+]

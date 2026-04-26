@@ -1,0 +1,62 @@
+[
+  {
+    "therapeutic_area": "Oncology",
+    "total_approvals": 215
+  },
+  {
+    "therapeutic_area": "Infectious disease",
+    "total_approvals": 203
+  },
+  {
+    "therapeutic_area": "Other / specialty",
+    "total_approvals": 190
+  },
+  {
+    "therapeutic_area": "Cardiovascular / renal",
+    "total_approvals": 172
+  },
+  {
+    "therapeutic_area": "Hematology",
+    "total_approvals": 153
+  },
+  {
+    "therapeutic_area": "Neurology",
+    "total_approvals": 90
+  },
+  {
+    "therapeutic_area": "Immunology / inflammation",
+    "total_approvals": 83
+  },
+  {
+    "therapeutic_area": "Endocrine / metabolic",
+    "total_approvals": 57
+  },
+  {
+    "therapeutic_area": "Gastroenterology / hepatology",
+    "total_approvals": 35
+  },
+  {
+    "therapeutic_area": "Respiratory / allergy",
+    "total_approvals": 31
+  },
+  {
+    "therapeutic_area": "Ophthalmology",
+    "total_approvals": 28
+  },
+  {
+    "therapeutic_area": "Psychiatry",
+    "total_approvals": 27
+  },
+  {
+    "therapeutic_area": "Genetic / inborn errors",
+    "total_approvals": 21
+  },
+  {
+    "therapeutic_area": "Urology / reproductive health",
+    "total_approvals": 19
+  },
+  {
+    "therapeutic_area": "Dermatology",
+    "total_approvals": 17
+  }
+]
