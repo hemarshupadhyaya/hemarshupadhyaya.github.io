@@ -1,0 +1,8 @@
+{
+  "source_repo": "https://github.com/hemarshupadhyaya/shape-of-drug-development-data-clean",
+  "source_branch": "main",
+  "source_commit": "",
+  "synced_at": "",
+  "data_year_range": "",
+  "notes": "Placeholder. Run scripts/sync-shape-data.sh ../shape-of-drug-development-data-clean to populate."
+}
