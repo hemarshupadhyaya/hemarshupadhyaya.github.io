@@ -10,25 +10,17 @@ export async function renderTherapeuticAreas(target: HTMLElement): Promise<() =>
           <div class="section-label">Section 4</div>
           <h2 id="therapeutic-areas-heading">Where approvals cluster</h2>
         </div>
-        <p class="section-kicker">A long record becomes less even once approvals are grouped by disease area.</p>
+        <p class="section-kicker">Grouped by disease area, the long record stops looking even.</p>
       </header>
-      <div class="section-body">
-        <div class="section-copy">
-          <p>
-            Approvals cluster around the diseases the science can reach. Oncology,
-            infectious disease, hematology, cardiovascular and specialty products
-            dominate the full record, but the mix changes meaningfully across
-            five-year windows.
-          </p>
-        </div>
-        <aside class="section-note" aria-label="Classification note">
-          <span>Classification note</span>
-          <p>Therapeutic areas are enriched classifications from the local pipeline, so they are descriptive rather than official FDA categories.</p>
-        </aside>
-      </div>
       <div class="chart-panel chart-panel-tall">
         <div class="chart" data-chart="therapeutic-areas" aria-busy="true"></div>
       </div>
+      <p class="visual-caption">
+        Oncology, infectious disease, hematology and specialty products dominate
+        the full record — but the trajectory in each five-year window tells a
+        sharper story than the totals alone. Therapeutic areas are enriched
+        classifications from the local pipeline, not official FDA categories.
+      </p>
     </section>
   `;
 

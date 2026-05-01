@@ -2,7 +2,7 @@ import { scaleLinear } from 'd3-scale';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { extent, max } from 'd3-array';
 import { line, curveMonotoneX } from 'd3-shape';
-import type { Selection } from 'd3-selection';
+import { pointer, type Selection } from 'd3-selection';
 import 'd3-transition';
 import type { ExpeditedPathwayRow } from '../data/types';
 import {
@@ -12,6 +12,7 @@ import {
   prefersReducedMotion,
   seriesPalette
 } from './base';
+import { showTooltip, hideTooltip, fmt } from '../utils/tooltip';
 
 const series = [
   { key: 'priority_review_count', label: 'Priority review', scene: 'priority-review' },
@@ -138,6 +139,68 @@ export function renderExpeditedPathwaysChart(
       .attr('fill', colors.textSecondary())
       .text((s) => s.label);
 
+    // Hover guide + tooltip
+    const guide = inner
+      .append('line')
+      .attr('y1', 0)
+      .attr('y2', innerHeight)
+      .attr('stroke', colors.text())
+      .attr('stroke-width', 1)
+      .attr('opacity', 0)
+      .attr('pointer-events', 'none');
+    const dotsLayer = inner.append('g').attr('pointer-events', 'none');
+
+    inner
+      .append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', innerWidth)
+      .attr('height', innerHeight)
+      .attr('fill', 'transparent')
+      .on('pointermove', function (event) {
+        const [mx] = pointer(event, this);
+        const yr = Math.round(x.invert(mx));
+        const row = data.find((d) => d.approval_year === yr);
+        if (!row) return;
+        const cx = x(row.approval_year);
+        guide.attr('x1', cx).attr('x2', cx).attr('opacity', 0.45);
+
+        dotsLayer.selectAll('circle').remove();
+        const activeIdx = series.findIndex((s) => s.scene === currentScene);
+        series.forEach((s, i) => {
+          if (i > activeIdx) return;
+          const v = (row[s.key as SeriesKey] as number) || 0;
+          dotsLayer
+            .append('circle')
+            .attr('cx', cx)
+            .attr('cy', y(v))
+            .attr('r', 3.5)
+            .attr('fill', seriesPalette[i] ?? colors.accent())
+            .attr('stroke', '#fff')
+            .attr('stroke-width', 1.5);
+        });
+
+        const rows = series
+          .map((s, i) => {
+            const v = (row[s.key as SeriesKey] as number) || 0;
+            const isActive = s.scene === currentScene;
+            const dimmed = i > activeIdx;
+            return `<div class="tip-row${isActive ? ' is-active' : ''}" style="${dimmed ? 'opacity:0.4' : ''}"><span><span class="tip-swatch" style="background:${seriesPalette[i] ?? colors.accent()}"></span>${s.label}</span><strong>${fmt(v)}</strong></div>`;
+          })
+          .join('');
+        const html = `
+          <div class="tip-title">${row.approval_year}</div>
+          ${rows}
+          <div class="tip-meta">${fmt(row.total_approvals)} total approvals · designations can overlap</div>
+        `;
+        showTooltip(html, event.clientX, event.clientY);
+      })
+      .on('pointerleave', () => {
+        guide.attr('opacity', 0);
+        dotsLayer.selectAll('circle').remove();
+        hideTooltip();
+      });
+
     svg
       .append('text')
       .attr('x', margin.left)
@@ -182,6 +245,9 @@ export function renderExpeditedPathwaysChart(
 
   return {
     setScene: applyScene,
-    destroy: cleanupResize
+    destroy: () => {
+      cleanupResize();
+      hideTooltip();
+    }
   };
 }

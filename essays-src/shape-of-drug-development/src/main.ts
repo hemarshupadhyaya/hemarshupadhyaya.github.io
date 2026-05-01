@@ -35,7 +35,7 @@ async function main(): Promise<void> {
   footer.className = 'footer';
   footer.innerHTML = `<p>Views expressed here are my own and not those of my employer.</p>`;
 
-  root.append(
+  root.replaceChildren(
     heroEl,
     approvalsEl,
     applicationTypeEl,

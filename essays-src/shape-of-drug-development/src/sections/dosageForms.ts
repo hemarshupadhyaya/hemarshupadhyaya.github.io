@@ -10,25 +10,16 @@ export async function renderDosageForms(target: HTMLElement): Promise<() => void
           <div class="section-label">Section 5</div>
           <h2 id="dosage-forms-heading">How they are delivered</h2>
         </div>
-        <p class="section-kicker">The final product shape is also a delivery system, not only a molecule.</p>
+        <p class="section-kicker">The product shape is also a delivery system, not only a molecule.</p>
       </header>
-      <div class="section-body">
-        <div class="section-copy">
-          <p>
-            Drug development is not just about molecules. It is also about how
-            patients receive them: injection, tablet, capsule, solution, patch,
-            inhaler. The dosage-form mix shows the practical shape that innovation
-            takes once it reaches patients.
-          </p>
-        </div>
-        <aside class="section-note" aria-label="Normalization note">
-          <span>Normalization note</span>
-          <p>Long FDA dosage-form text is grouped into readable families so rare forms do not overwhelm the chart.</p>
-        </aside>
-      </div>
       <div class="chart-panel chart-panel-tall">
         <div class="chart" data-chart="dosage-forms" aria-busy="true"></div>
       </div>
+      <p class="visual-caption">
+        Innovation is delivered in tablets, injections, capsules, solutions, patches
+        and inhalers. The streamgraph reads as a moving mix — see how the injection
+        layer thickens in the biologics era while oral forms persist underneath.
+      </p>
     </section>
   `;
 
