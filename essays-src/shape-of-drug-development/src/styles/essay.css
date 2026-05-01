@@ -136,6 +136,75 @@
   color: var(--text-primary);
 }
 
+.section-header {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.section-header .section-label {
+  margin-bottom: var(--space-2);
+}
+
+.section-kicker {
+  max-width: 520px;
+  color: var(--text-tertiary);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.section-body {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.section-copy {
+  min-width: 0;
+}
+
+.section-note {
+  align-self: start;
+  border-left: 2px solid var(--accent);
+  padding: var(--space-2) 0 var(--space-2) var(--space-3);
+  color: var(--text-tertiary);
+}
+
+.section-note span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.section-note p {
+  margin: 0;
+  color: var(--text-tertiary);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+@media (min-width: 760px) {
+  .section-header {
+    grid-template-columns: minmax(260px, 1fr) minmax(220px, 0.7fr);
+    align-items: end;
+  }
+
+  .section-kicker {
+    justify-self: end;
+    text-align: right;
+  }
+
+  .section-body {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 0.42fr);
+    align-items: start;
+  }
+}
+
 .section p {
   color: var(--text-secondary);
   font-size: 0.95rem;
@@ -162,6 +231,23 @@
   margin-top: var(--space-4);
   width: 100%;
   min-height: 220px;
+}
+
+.chart-panel {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: var(--space-3);
+  background:
+    linear-gradient(180deg, rgba(44, 95, 45, 0.035), transparent 140px),
+    var(--card-bg);
+}
+
+.chart-panel .chart {
+  margin-top: 0;
+}
+
+.chart-panel-tall {
+  padding-bottom: var(--space-4);
 }
 
 .chart svg {
@@ -231,6 +317,13 @@
   z-index: 1;
 }
 
+.scrolly-chart-wrap .chart {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: var(--space-3);
+  background: var(--card-bg);
+}
+
 /* Soft fade at the bottom so steps appear to scroll *under* the sticky chart
    on mobile. Subtle on desktop. */
 .scrolly-chart-wrap::after {
@@ -287,6 +380,147 @@
   height: 1px;
   background: var(--border);
   margin: var(--space-7) 0;
+}
+
+.recent-grid {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
+
+.recent-stat {
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-3);
+}
+
+.recent-stat span {
+  display: block;
+  margin-bottom: var(--space-1);
+  color: var(--text-tertiary);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.recent-stat strong {
+  display: block;
+  color: var(--text-primary);
+  font-family: var(--font-serif);
+  font-size: 2.1rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.recent-stat p {
+  margin-top: var(--space-1);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.recent-stat.is-provisional strong {
+  color: var(--accent);
+}
+
+.recent-note {
+  margin-top: 0;
+}
+
+.latest-panel {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card-bg);
+  overflow: hidden;
+}
+
+.latest-panel-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.latest-panel-header h3,
+.latest-row h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+.latest-panel-header span {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 8px;
+  color: var(--text-tertiary);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.latest-list {
+  display: grid;
+}
+
+.latest-row {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.latest-row:last-child {
+  border-bottom: 0;
+}
+
+.latest-row time {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text-tertiary);
+  font-size: 0.72rem;
+}
+
+.latest-row p {
+  margin-top: 2px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.latest-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 6px;
+}
+
+.latest-meta span {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 8px;
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+@media (min-width: 760px) {
+  .recent-grid {
+    grid-template-columns: 1fr 1fr minmax(220px, 1.2fr);
+    align-items: start;
+  }
+
+  .latest-row {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 0.72fr);
+    align-items: start;
+  }
 }
 
 .methodology ul {

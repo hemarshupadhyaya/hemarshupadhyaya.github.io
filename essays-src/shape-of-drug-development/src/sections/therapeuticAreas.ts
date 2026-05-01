@@ -4,16 +4,31 @@ import type { TherapeuticAreaCountRow, TherapeuticAreaPeriodRow } from '../data/
 
 export async function renderTherapeuticAreas(target: HTMLElement): Promise<() => void> {
   target.innerHTML = `
-    <section id="therapeutic-areas" class="section" aria-labelledby="therapeutic-areas-heading">
-      <div class="section-label">Section 4</div>
-      <h2 id="therapeutic-areas-heading">Where approvals cluster</h2>
-      <p>
-        Approvals cluster around the diseases the science can reach. Oncology,
-        infectious disease, hematology, cardiovascular and specialty products
-        dominate the full record, but the mix changes meaningfully across
-        five-year windows.
-      </p>
-      <div class="chart" data-chart="therapeutic-areas" aria-busy="true"></div>
+    <section id="therapeutic-areas" class="section visual-section" aria-labelledby="therapeutic-areas-heading">
+      <header class="section-header">
+        <div>
+          <div class="section-label">Section 4</div>
+          <h2 id="therapeutic-areas-heading">Where approvals cluster</h2>
+        </div>
+        <p class="section-kicker">A long record becomes less even once approvals are grouped by disease area.</p>
+      </header>
+      <div class="section-body">
+        <div class="section-copy">
+          <p>
+            Approvals cluster around the diseases the science can reach. Oncology,
+            infectious disease, hematology, cardiovascular and specialty products
+            dominate the full record, but the mix changes meaningfully across
+            five-year windows.
+          </p>
+        </div>
+        <aside class="section-note" aria-label="Classification note">
+          <span>Classification note</span>
+          <p>Therapeutic areas are enriched classifications from the local pipeline, so they are descriptive rather than official FDA categories.</p>
+        </aside>
+      </div>
+      <div class="chart-panel chart-panel-tall">
+        <div class="chart" data-chart="therapeutic-areas" aria-busy="true"></div>
+      </div>
     </section>
   `;
 

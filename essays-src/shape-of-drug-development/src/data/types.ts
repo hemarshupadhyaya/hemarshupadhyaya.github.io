@@ -49,3 +49,18 @@ export interface DosageFormRow {
   dosage_form: string;
   total_approvals: number;
 }
+
+export interface ApprovalRecord {
+  approval_year: number;
+  approval_date: string | null;
+  proprietary_name: string | null;
+  active_ingredient: string | null;
+  application_type: string | null;
+  applicant: string | null;
+  indication: string | null;
+  therapeutic_area: string | null;
+  dosage_form: string | null;
+  source_status: string | null;
+  source_as_of_date: string | null;
+  is_provisional: boolean | null;
+}

@@ -61,6 +61,7 @@ export async function renderExpedited(target: HTMLElement): Promise<() => void> 
       <header class="scrolly-header">
         <div class="section-label">Section 3</div>
         <h2 id="expedited-heading">The acceleration layer</h2>
+        <p class="section-kicker">These designations describe regulatory handling, not a promise of clinical importance.</p>
       </header>
       <div class="scrolly-grid">
         <div class="scrolly-narrative">${stepsHtml}</div>

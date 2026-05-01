@@ -68,6 +68,7 @@ export async function renderApprovals(
       <header class="scrolly-header">
         <div class="section-label">Section 1</div>
         <h2 id="approvals-heading">Approval waves</h2>
+        <p class="section-kicker">The annual count moves in waves, not in a clean upward line.</p>
       </header>
       <div class="scrolly-grid">
         <div class="scrolly-narrative">${stepsHtml}</div>

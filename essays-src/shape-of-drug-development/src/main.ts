@@ -8,7 +8,7 @@ import { renderApplicationType } from './sections/applicationType';
 import { renderExpedited } from './sections/expedited';
 import { renderTherapeuticAreas } from './sections/therapeuticAreas';
 import { renderDosageForms } from './sections/dosageForms';
-import { renderPlaceholderSections } from './sections/placeholders';
+import { renderRecentYears } from './sections/recentYears';
 import { renderMethodology } from './sections/methodology';
 import { setupSectionScroll } from './scroll/setupScroll';
 
@@ -25,7 +25,7 @@ async function main(): Promise<void> {
   const expeditedEl = document.createElement('div');
   const therapeuticAreasEl = document.createElement('div');
   const dosageFormsEl = document.createElement('div');
-  const placeholdersEl = document.createElement('div');
+  const recentYearsEl = document.createElement('div');
   const methodologyEl = document.createElement('div');
   const separator = document.createElement('div');
   separator.className = 'separator';
@@ -42,7 +42,7 @@ async function main(): Promise<void> {
     expeditedEl,
     therapeuticAreasEl,
     dosageFormsEl,
-    placeholdersEl,
+    recentYearsEl,
     separator,
     methodologyEl,
     footer
@@ -53,7 +53,7 @@ async function main(): Promise<void> {
 
   const [
     cleanupApprovals,
-    ,
+    cleanupApplicationType,
     cleanupExpedited,
     cleanupTherapeuticAreas,
     cleanupDosageForms
@@ -66,12 +66,13 @@ async function main(): Promise<void> {
   ]);
   cleanups.push(
     cleanupApprovals,
+    cleanupApplicationType,
     cleanupExpedited,
     cleanupTherapeuticAreas,
     cleanupDosageForms
   );
 
-  placeholdersEl.innerHTML = renderPlaceholderSections();
+  recentYearsEl.innerHTML = await renderRecentYears();
   methodologyEl.innerHTML = await renderMethodology();
 
   // Section-level observer (toggles .is-active for any subtle section styling).
