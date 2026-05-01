@@ -41,8 +41,8 @@ export function renderApplicationTypeChart(
 ): () => void {
   const provisionalYear = options.provisionalYear;
   const reduced = prefersReducedMotion();
-  let introPlayed = false;
-  let intersectionCleanup: (() => void) | null = null;
+  let entered = false;
+  let activeIO: IntersectionObserver | null = null;
 
   const shares: ShareRow[] = data.map((d) => {
     const total = (d.nda_count || 0) + (d.bla_count || 0) + (d.unknown_count || 0);
@@ -97,7 +97,11 @@ export function renderApplicationTypeChart(
       .y1((d) => y(d[1]))
       .curve(curveMonotoneX);
 
-    // Clip-rect grows from the bottom up so the area "rises" on first view.
+    // Cancel any previous IO so it doesn't animate a now-detached clip-rect on resize.
+    activeIO?.disconnect();
+    activeIO = null;
+
+    // Clip-rect sweeps left-to-right as years progress.
     const clipId = `apptype-clip-${Math.random().toString(36).slice(2, 8)}`;
     const clipRect = svg
       .append('defs')
@@ -105,9 +109,9 @@ export function renderApplicationTypeChart(
       .attr('id', clipId)
       .append('rect')
       .attr('x', 0)
-      .attr('y', reduced || introPlayed ? 0 : innerHeight)
-      .attr('width', innerWidth)
-      .attr('height', reduced || introPlayed ? innerHeight : 0);
+      .attr('y', 0)
+      .attr('width', entered || reduced ? innerWidth : 0)
+      .attr('height', innerHeight);
 
     const layerGroup = inner
       .append('g')
@@ -122,29 +126,19 @@ export function renderApplicationTypeChart(
       .attr('opacity', (d) => (d.key === 'unknown_count' ? 0.5 : 0.9))
       .attr('d', (d) => areaGen(d as unknown as { data: ShareRow; 0: number; 1: number }[]) ?? '');
 
-    const playIntro = () => {
-      if (introPlayed || reduced) return;
-      introPlayed = true;
-      clipRect
-        .transition()
-        .duration(900)
-        .attr('y', 0)
-        .attr('height', innerHeight);
-    };
-
-    if (!reduced && !introPlayed) {
+    if (!reduced && !entered) {
       const io = new IntersectionObserver(
         (entries) => {
-          if (entries.some((e) => e.isIntersecting)) {
-            playIntro();
-            io.disconnect();
-            intersectionCleanup = null;
-          }
+          if (!entries.some((e) => e.isIntersecting)) return;
+          entered = true;
+          io.disconnect();
+          activeIO = null;
+          clipRect.transition().duration(1100).attr('width', innerWidth);
         },
-        { threshold: 0.25 }
+        { threshold: 0.2 }
       );
       io.observe(container);
-      intersectionCleanup = () => io.disconnect();
+      activeIO = io;
     }
 
     // Provisional year overlay
@@ -312,7 +306,8 @@ export function renderApplicationTypeChart(
   const cleanupResize = onResize(container, draw);
   return () => {
     cleanupResize();
-    intersectionCleanup?.();
+    activeIO?.disconnect();
+    activeIO = null;
     hideTooltip();
   };
 }

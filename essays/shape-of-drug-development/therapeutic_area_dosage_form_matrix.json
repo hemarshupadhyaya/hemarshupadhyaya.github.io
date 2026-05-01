@@ -1,0 +1,318 @@
+{
+  "therapeutic_areas": [
+    {
+      "therapeutic_area": "Oncology",
+      "total": 215
+    },
+    {
+      "therapeutic_area": "Infectious disease",
+      "total": 203
+    },
+    {
+      "therapeutic_area": "Other / specialty",
+      "total": 190
+    },
+    {
+      "therapeutic_area": "Cardiovascular / renal",
+      "total": 172
+    },
+    {
+      "therapeutic_area": "Hematology",
+      "total": 153
+    },
+    {
+      "therapeutic_area": "Neurology",
+      "total": 90
+    },
+    {
+      "therapeutic_area": "Immunology / inflammation",
+      "total": 83
+    },
+    {
+      "therapeutic_area": "Endocrine / metabolic",
+      "total": 57
+    }
+  ],
+  "dosage_forms": [
+    "Injectable",
+    "Tablet",
+    "Capsule",
+    "Solution",
+    "Powder",
+    "Topical"
+  ],
+  "matrix": [
+    {
+      "therapeutic_area": "Oncology",
+      "total": 215,
+      "forms": {
+        "Injectable": {
+          "count": 85,
+          "share": 0.3953488372093023
+        },
+        "Tablet": {
+          "count": 66,
+          "share": 0.30697674418604654
+        },
+        "Capsule": {
+          "count": 32,
+          "share": 0.14883720930232558
+        },
+        "Solution": {
+          "count": 16,
+          "share": 0.07441860465116279
+        },
+        "Powder": {
+          "count": 10,
+          "share": 0.046511627906976744
+        },
+        "Topical": {
+          "count": 3,
+          "share": 0.013953488372093023
+        },
+        "Other": {
+          "count": 3,
+          "share": 0.013953488372093023
+        }
+      }
+    },
+    {
+      "therapeutic_area": "Infectious disease",
+      "total": 203,
+      "forms": {
+        "Injectable": {
+          "count": 47,
+          "share": 0.2315270935960591
+        },
+        "Tablet": {
+          "count": 79,
+          "share": 0.3891625615763547
+        },
+        "Capsule": {
+          "count": 25,
+          "share": 0.12315270935960591
+        },
+        "Solution": {
+          "count": 12,
+          "share": 0.059113300492610835
+        },
+        "Powder": {
+          "count": 19,
+          "share": 0.09359605911330049
+        },
+        "Topical": {
+          "count": 13,
+          "share": 0.06403940886699508
+        },
+        "Other": {
+          "count": 8,
+          "share": 0.03940886699507389
+        }
+      }
+    },
+    {
+      "therapeutic_area": "Other / specialty",
+      "total": 190,
+      "forms": {
+        "Injectable": {
+          "count": 76,
+          "share": 0.4
+        },
+        "Tablet": {
+          "count": 48,
+          "share": 0.25263157894736843
+        },
+        "Capsule": {
+          "count": 17,
+          "share": 0.08947368421052632
+        },
+        "Solution": {
+          "count": 27,
+          "share": 0.14210526315789473
+        },
+        "Powder": {
+          "count": 2,
+          "share": 0.010526315789473684
+        },
+        "Topical": {
+          "count": 4,
+          "share": 0.021052631578947368
+        },
+        "Other": {
+          "count": 16,
+          "share": 0.08421052631578947
+        }
+      }
+    },
+    {
+      "therapeutic_area": "Cardiovascular / renal",
+      "total": 172,
+      "forms": {
+        "Injectable": {
+          "count": 35,
+          "share": 0.20348837209302326
+        },
+        "Tablet": {
+          "count": 77,
+          "share": 0.4476744186046512
+        },
+        "Capsule": {
+          "count": 28,
+          "share": 0.16279069767441862
+        },
+        "Solution": {
+          "count": 24,
+          "share": 0.13953488372093023
+        },
+        "Powder": {
+          "count": 3,
+          "share": 0.01744186046511628
+        },
+        "Topical": {
+          "count": 1,
+          "share": 0.005813953488372093
+        },
+        "Other": {
+          "count": 4,
+          "share": 0.023255813953488372
+        }
+      }
+    },
+    {
+      "therapeutic_area": "Hematology",
+      "total": 153,
+      "forms": {
+        "Injectable": {
+          "count": 82,
+          "share": 0.5359477124183006
+        },
+        "Tablet": {
+          "count": 34,
+          "share": 0.2222222222222222
+        },
+        "Capsule": {
+          "count": 23,
+          "share": 0.1503267973856209
+        },
+        "Solution": {
+          "count": 4,
+          "share": 0.026143790849673203
+        },
+        "Powder": {
+          "count": 8,
+          "share": 0.05228758169934641
+        },
+        "Topical": {
+          "count": 0,
+          "share": 0.0
+        },
+        "Other": {
+          "count": 2,
+          "share": 0.013071895424836602
+        }
+      }
+    },
+    {
+      "therapeutic_area": "Neurology",
+      "total": 90,
+      "forms": {
+        "Injectable": {
+          "count": 22,
+          "share": 0.24444444444444444
+        },
+        "Tablet": {
+          "count": 43,
+          "share": 0.4777777777777778
+        },
+        "Capsule": {
+          "count": 11,
+          "share": 0.12222222222222222
+        },
+        "Solution": {
+          "count": 8,
+          "share": 0.08888888888888889
+        },
+        "Powder": {
+          "count": 1,
+          "share": 0.011111111111111112
+        },
+        "Topical": {
+          "count": 0,
+          "share": 0.0
+        },
+        "Other": {
+          "count": 5,
+          "share": 0.05555555555555555
+        }
+      }
+    },
+    {
+      "therapeutic_area": "Immunology / inflammation",
+      "total": 83,
+      "forms": {
+        "Injectable": {
+          "count": 34,
+          "share": 0.40963855421686746
+        },
+        "Tablet": {
+          "count": 18,
+          "share": 0.21686746987951808
+        },
+        "Capsule": {
+          "count": 10,
+          "share": 0.12048192771084337
+        },
+        "Solution": {
+          "count": 2,
+          "share": 0.024096385542168676
+        },
+        "Powder": {
+          "count": 4,
+          "share": 0.04819277108433735
+        },
+        "Topical": {
+          "count": 9,
+          "share": 0.10843373493975904
+        },
+        "Other": {
+          "count": 6,
+          "share": 0.07228915662650602
+        }
+      }
+    },
+    {
+      "therapeutic_area": "Endocrine / metabolic",
+      "total": 57,
+      "forms": {
+        "Injectable": {
+          "count": 23,
+          "share": 0.40350877192982454
+        },
+        "Tablet": {
+          "count": 25,
+          "share": 0.43859649122807015
+        },
+        "Capsule": {
+          "count": 0,
+          "share": 0.0
+        },
+        "Solution": {
+          "count": 8,
+          "share": 0.14035087719298245
+        },
+        "Powder": {
+          "count": 0,
+          "share": 0.0
+        },
+        "Topical": {
+          "count": 1,
+          "share": 0.017543859649122806
+        },
+        "Other": {
+          "count": 0,
+          "share": 0.0
+        }
+      }
+    }
+  ]
+}

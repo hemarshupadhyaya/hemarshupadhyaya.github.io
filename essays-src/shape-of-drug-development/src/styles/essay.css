@@ -626,6 +626,14 @@
   line-height: 1.6;
 }
 
+.bridge-section .section-label {
+  color: var(--accent);
+}
+
+.bridge-section h2 {
+  font-size: 1.45rem;
+}
+
 .chart-tip {
   z-index: 50;
   min-width: 160px;

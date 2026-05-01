@@ -32,8 +32,8 @@ export function renderDosageFormChart(
   data: DosageFormRow[]
 ): () => void {
   const reduced = prefersReducedMotion();
-  let introPlayed = false;
-  let intersectionCleanup: (() => void) | null = null;
+  let entered = false;
+  let activeIO: IntersectionObserver | null = null;
 
   const draw = () => {
     const { svg, inner, innerWidth, innerHeight, margin, height } =
@@ -95,6 +95,10 @@ export function renderDosageFormChart(
       .y1((d) => y(d[1]))
       .curve(curveBasis);
 
+    // Cancel any previous IO so resize doesn't leave us stuck at width=0.
+    activeIO?.disconnect();
+    activeIO = null;
+
     // Clip-rect sweeps left-to-right so the streams "grow through time" on first view.
     const clipId = `dosage-clip-${Math.random().toString(36).slice(2, 8)}`;
     const sweepRect = svg
@@ -104,7 +108,7 @@ export function renderDosageFormChart(
       .append('rect')
       .attr('x', 0)
       .attr('y', 0)
-      .attr('width', reduced || introPlayed ? innerWidth : 0)
+      .attr('width', reduced || entered ? innerWidth : 0)
       .attr('height', innerHeight);
 
     const streamsGroup = inner
@@ -124,24 +128,19 @@ export function renderDosageFormChart(
         .attr('stroke-width', 0.5)
         .style('cursor', 'pointer');
 
-    const playIntro = () => {
-      if (introPlayed || reduced) return;
-      introPlayed = true;
-      sweepRect.transition().duration(1200).attr('width', innerWidth);
-    };
-    if (!reduced && !introPlayed) {
+    if (!reduced && !entered) {
       const io = new IntersectionObserver(
         (entries) => {
-          if (entries.some((e) => e.isIntersecting)) {
-            playIntro();
-            io.disconnect();
-            intersectionCleanup = null;
-          }
+          if (!entries.some((e) => e.isIntersecting)) return;
+          entered = true;
+          io.disconnect();
+          activeIO = null;
+          sweepRect.transition().duration(1200).attr('width', innerWidth);
         },
         { threshold: 0.2 }
       );
       io.observe(container);
-      intersectionCleanup = () => io.disconnect();
+      activeIO = io;
     }
 
     layer.attr('pointer-events', 'none');
@@ -279,7 +278,8 @@ export function renderDosageFormChart(
   const cleanupResize = onResize(container, draw);
   return () => {
     cleanupResize();
-    intersectionCleanup?.();
+    activeIO?.disconnect();
+    activeIO = null;
     hideTooltip();
   };
 }

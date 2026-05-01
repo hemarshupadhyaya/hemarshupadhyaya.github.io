@@ -50,6 +50,16 @@ export interface DosageFormRow {
   total_approvals: number;
 }
 
+export interface TaFormMatrix {
+  therapeutic_areas: { therapeutic_area: string; total: number }[];
+  dosage_forms: string[];
+  matrix: {
+    therapeutic_area: string;
+    total: number;
+    forms: Record<string, { count: number; share: number }>;
+  }[];
+}
+
 export interface ApprovalRecord {
   approval_year: number;
   approval_date: string | null;

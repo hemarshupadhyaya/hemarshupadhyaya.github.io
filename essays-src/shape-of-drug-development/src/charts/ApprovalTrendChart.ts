@@ -28,35 +28,47 @@ export interface ApprovalTrendOptions {
 
 interface SceneDef {
   highlight: (year: number) => boolean;
+  revealThrough: number; // bars become visible for years <= this; -Infinity hides all
+  pulseYear?: number;
   annotation?: { year: number; text: string };
 }
 
 function buildScenes(provisionalYear?: number): Record<ApprovalScene, SceneDef> {
+  const provYear = provisionalYear ?? 2026;
   return {
-    overview: { highlight: () => true },
+    overview: {
+      highlight: () => true,
+      revealThrough: Number.NEGATIVE_INFINITY
+    },
     'peak-1996': {
       highlight: (y) => y >= 1995 && y <= 1997,
+      revealThrough: 1997,
+      pulseYear: 1996,
       annotation: { year: 1996, text: '1996 — 59 approvals (PDUFA era)' }
     },
     'dip-2000s': {
       highlight: (y) => y >= 2005 && y <= 2010,
+      revealThrough: 2010,
+      pulseYear: 2007,
       annotation: { year: 2007, text: '2005–2010 trough (low of 18 in 2007)' }
     },
     'rise-2014': {
       highlight: (y) => y >= 2014 && y <= 2024,
+      revealThrough: 2024,
+      pulseYear: 2018,
       annotation: { year: 2018, text: 'Sustained rise: 40+ approvals most years' }
     },
     'provisional-2026': {
-      highlight: (y) => y === (provisionalYear ?? 2026),
+      highlight: (y) => y === provYear,
+      revealThrough: provYear,
+      pulseYear: provYear,
       annotation: {
-        year: provisionalYear ?? 2026,
-        text: `${provisionalYear ?? 2026} — provisional, year in progress`
+        year: provYear,
+        text: `${provYear} — provisional, year in progress`
       }
     }
   };
 }
-
-const PULSE_YEARS = [1996, 2007, 2018];
 
 export function renderApprovalTrendChart(
   container: HTMLElement,
@@ -73,8 +85,9 @@ export function renderApprovalTrendChart(
   let xScale: ReturnType<typeof scaleBand<number>> | null = null;
   let yScale: ReturnType<typeof scaleLinear> | null = null;
   let chartInnerWidth = 0;
-  let introPlayed = false;
-  let intersectionCleanup: (() => void) | null = null;
+  let entered = false;
+  let activeIO: IntersectionObserver | null = null;
+  let pulseLayer: Selection<SVGGElement, unknown, null, undefined> | null = null;
 
   function rollingMean(rows: ApprovalTrendRow[]): { year: number; value: number }[] {
     const usable = rows.filter((d) => d.approval_year !== provisionalYear);
@@ -93,6 +106,10 @@ export function renderApprovalTrendChart(
   const peakValue = max(data, (d) => d.total_approvals) ?? 0;
 
   const draw = () => {
+    // Cancel any previous IO so resize doesn't strand a detached path or pulse layer.
+    activeIO?.disconnect();
+    activeIO = null;
+
     const { svg, inner, innerWidth, innerHeight, margin, height } =
       createResponsiveSvg(container, { aspect: 0.55, maxHeight: 360 });
     chartInnerWidth = innerWidth;
@@ -130,7 +147,7 @@ export function renderApprovalTrendChart(
       .attr('y', (d) => y(d.total_approvals))
       .attr('width', x.bandwidth())
       .attr('height', (d) => innerHeight - y(d.total_approvals))
-      .attr('opacity', reduced || introPlayed ? 1 : 0);
+      .attr('opacity', 0);
 
     const tickEvery = innerWidth < 480 ? 10 : 5;
     inner
@@ -198,7 +215,7 @@ export function renderApprovalTrendChart(
       .attr('stroke-linejoin', 'round')
       .attr('pointer-events', 'none');
 
-    const pulseLayer = inner.append('g').attr('class', 'pulses').attr('pointer-events', 'none');
+    pulseLayer = inner.append('g').attr('class', 'pulses').attr('pointer-events', 'none');
     annotationLayer = inner.append('g').attr('class', 'annotations');
 
     // Hover overlay: one transparent rect per year for clean hit-testing
@@ -235,8 +252,9 @@ export function renderApprovalTrendChart(
         const cx = (xScale(row.approval_year) ?? 0) + xScale.bandwidth() / 2;
         guide.attr('x1', cx).attr('x2', cx).attr('opacity', 0.45);
         bars?.attr('opacity', (d) => {
-          if (d.approval_year === row.approval_year) return 1;
-          return currentScene === 'overview' ? 0.55 : 0.22;
+          const reveal = scenes[currentScene].revealThrough;
+          if (d.approval_year > reveal) return 0;
+          return d.approval_year === row.approval_year ? 1 : 0.28;
         });
         const trend = trendData.find((t) => t.year === row.approval_year);
         const isProv =
@@ -278,95 +296,97 @@ export function renderApprovalTrendChart(
       )}.`
     );
 
+    // Trendline starts hidden if we haven't entered yet; the IO below draws it in.
+    if (trendPath) {
+      const node = trendPath.node();
+      if (node && !reduced && !entered) {
+        const len = node.getTotalLength();
+        trendPath
+          .attr('stroke-dasharray', `${len}`)
+          .attr('stroke-dashoffset', `${len}`);
+      } else {
+        trendPath.attr('stroke-dasharray', null).attr('stroke-dashoffset', null);
+      }
+    }
+    if (trendArea) {
+      trendArea.attr('opacity', !reduced && !entered ? 0 : 0.18);
+    }
+
     applyScene(currentScene);
 
-    // Intro animation: bars sweep in left-to-right, then line draws, then pulses
-    if (!reduced && !introPlayed) {
-      const playIntro = () => {
-        if (introPlayed) return;
-        introPlayed = true;
-        if (!bars || !trendPath || !xScale) return;
-
-        const span = data.length;
-        bars
-          .transition()
-          .duration(40)
-          .delay((d) => 600 * (data.indexOf(d) / span))
-          .attr('opacity', 1);
-
-        const node = trendPath.node();
-        if (node) {
+    // On first viewport entry: draw the trendline left-to-right. Bars stay hidden
+    // until the user scrolls into a story scene (handled in applyScene).
+    if (!reduced && !entered) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          entered = true;
+          io.disconnect();
+          activeIO = null;
+          if (!trendPath) return;
+          const node = trendPath.node();
+          if (!node) return;
           const len = node.getTotalLength();
+          trendArea
+            ?.transition()
+            .duration(800)
+            .attr('opacity', 0.18);
           trendPath
             .attr('stroke-dasharray', `${len}`)
             .attr('stroke-dashoffset', `${len}`)
             .transition()
-            .duration(1200)
-            .delay(550)
+            .duration(1600)
             .attr('stroke-dashoffset', '0')
             .on('end', () => {
               trendPath?.attr('stroke-dasharray', null);
             });
-        }
-
-        // Pulses on peak / trough / rise anchors
-        PULSE_YEARS.forEach((yr, i) => {
-          const row = data.find((d) => d.approval_year === yr);
-          if (!row || !xScale || !yScale) return;
-          const cx = (xScale(yr) ?? 0) + xScale.bandwidth() / 2;
-          const cy = yScale(row.total_approvals) as number;
-          for (let k = 0; k < 2; k++) {
-            pulseLayer
-              .append('circle')
-              .attr('cx', cx)
-              .attr('cy', cy)
-              .attr('r', 3)
-              .attr('fill', 'none')
-              .attr('stroke', colors.accent())
-              .attr('stroke-width', 1.5)
-              .attr('opacity', 0.8)
-              .transition()
-              .delay(1500 + i * 220 + k * 600)
-              .duration(900)
-              .attr('r', 22)
-              .attr('opacity', 0)
-              .remove();
-          }
-          pulseLayer
-            .append('circle')
-            .attr('cx', cx)
-            .attr('cy', cy)
-            .attr('r', 0)
-            .attr('fill', colors.accent())
-            .attr('opacity', 0)
-            .transition()
-            .delay(1500 + i * 220)
-            .duration(220)
-            .attr('r', 4)
-            .attr('opacity', 1);
-        });
-      };
-
-      // Trigger when chart enters the viewport
-      const io = new IntersectionObserver(
-        (entries) => {
-          if (entries.some((e) => e.isIntersecting)) {
-            playIntro();
-            io.disconnect();
-            intersectionCleanup = null;
-          }
         },
-        { threshold: 0.25 }
+        { threshold: 0.2 }
       );
       io.observe(container);
-      intersectionCleanup = () => io.disconnect();
-
-      // Failsafe: if user is already past the section, the IO fires immediately;
-      // if not visible yet, we do nothing until they scroll there.
+      activeIO = io;
     }
   };
 
+  function pulseAt(year: number): void {
+    if (!pulseLayer || !xScale || !yScale || reduced) return;
+    pulseLayer.selectAll('*').remove();
+    const row = data.find((d) => d.approval_year === year);
+    if (!row) return;
+    const cx = (xScale(year) ?? 0) + xScale.bandwidth() / 2;
+    const cy = yScale(row.total_approvals) as number;
+    for (let k = 0; k < 2; k++) {
+      pulseLayer
+        .append('circle')
+        .attr('cx', cx)
+        .attr('cy', cy)
+        .attr('r', 3)
+        .attr('fill', 'none')
+        .attr('stroke', colors.accent())
+        .attr('stroke-width', 1.5)
+        .attr('opacity', 0.8)
+        .transition()
+        .delay(k * 700)
+        .duration(1000)
+        .attr('r', 24)
+        .attr('opacity', 0)
+        .remove();
+    }
+    pulseLayer
+      .append('circle')
+      .attr('cx', cx)
+      .attr('cy', cy)
+      .attr('r', 0)
+      .attr('fill', colors.accent())
+      .attr('opacity', 0)
+      .transition()
+      .duration(220)
+      .attr('r', 4)
+      .attr('opacity', 1);
+  }
+
   function applyScene(scene: ApprovalScene): void {
+    const sceneChanged = currentScene !== scene;
     currentScene = scene;
     if (!bars || !annotationLayer || !xScale || !yScale) return;
     const def = scenes[scene];
@@ -377,16 +397,13 @@ export function renderApprovalTrendChart(
       .attr('fill', (d) => {
         const isProv = provisionalYear && d.approval_year === provisionalYear;
         const isHi = def.highlight(d.approval_year);
-        if (isProv && (scene === 'provisional-2026' || scene === 'overview')) {
-          return scene === 'provisional-2026' ? colors.accent() : colors.textTertiary();
-        }
+        if (scene === 'provisional-2026' && isProv) return colors.accent();
         return isHi ? colors.accent() : colors.textTertiary();
       })
       .attr('opacity', (d) => {
-        const isProv = provisionalYear && d.approval_year === provisionalYear;
+        if (d.approval_year > def.revealThrough) return 0;
         const isHi = def.highlight(d.approval_year);
-        if (scene === 'overview') return isProv ? 0.55 : 1;
-        return isHi ? 1 : 0.18;
+        return isHi ? 1 : 0.32;
       });
 
     if (trendPath && trendArea) {
@@ -406,6 +423,10 @@ export function renderApprovalTrendChart(
       seenAnnotations.add(scene);
     }
     redrawAnnotations(scene);
+
+    if (sceneChanged && def.pulseYear !== undefined) {
+      pulseAt(def.pulseYear);
+    }
   }
 
   function redrawAnnotations(activeScene: ApprovalScene): void {
@@ -470,8 +491,8 @@ export function renderApprovalTrendChart(
     setScene: applyScene,
     destroy: () => {
       cleanupResize();
-      intersectionCleanup?.();
-      // Clear any chart-bound element state so a stale tooltip doesn't linger
+      activeIO?.disconnect();
+      activeIO = null;
       hideTooltip();
       select(container).selectAll('*').interrupt();
     }

@@ -7,6 +7,7 @@ import { renderApprovals } from './sections/approvals';
 import { renderApplicationType } from './sections/applicationType';
 import { renderExpedited } from './sections/expedited';
 import { renderTherapeuticAreas } from './sections/therapeuticAreas';
+import { renderFormulationBridge } from './sections/formulationBridge';
 import { renderDosageForms } from './sections/dosageForms';
 import { renderRecentYears } from './sections/recentYears';
 import { renderMethodology } from './sections/methodology';
@@ -24,6 +25,7 @@ async function main(): Promise<void> {
   const applicationTypeEl = document.createElement('div');
   const expeditedEl = document.createElement('div');
   const therapeuticAreasEl = document.createElement('div');
+  const formulationBridgeEl = document.createElement('div');
   const dosageFormsEl = document.createElement('div');
   const recentYearsEl = document.createElement('div');
   const methodologyEl = document.createElement('div');
@@ -41,6 +43,7 @@ async function main(): Promise<void> {
     applicationTypeEl,
     expeditedEl,
     therapeuticAreasEl,
+    formulationBridgeEl,
     dosageFormsEl,
     recentYearsEl,
     separator,
@@ -56,12 +59,14 @@ async function main(): Promise<void> {
     cleanupApplicationType,
     cleanupExpedited,
     cleanupTherapeuticAreas,
+    cleanupFormulationBridge,
     cleanupDosageForms
   ] = await Promise.all([
     renderApprovals(approvalsEl, provisionalYear),
     renderApplicationType(applicationTypeEl, provisionalYear),
     renderExpedited(expeditedEl),
     renderTherapeuticAreas(therapeuticAreasEl),
+    renderFormulationBridge(formulationBridgeEl),
     renderDosageForms(dosageFormsEl)
   ]);
   cleanups.push(
@@ -69,6 +74,7 @@ async function main(): Promise<void> {
     cleanupApplicationType,
     cleanupExpedited,
     cleanupTherapeuticAreas,
+    cleanupFormulationBridge,
     cleanupDosageForms
   );
 

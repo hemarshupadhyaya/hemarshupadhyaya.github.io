@@ -39,8 +39,8 @@ export function renderTherapeuticAreaChart(
   periods: TherapeuticAreaPeriodRow[]
 ): () => void {
   const reduced = prefersReducedMotion();
-  let introPlayed = false;
-  let intersectionCleanup: (() => void) | null = null;
+  let entered = false;
+  let activeIO: IntersectionObserver | null = null;
 
   const draw = () => {
     const { svg, inner, innerWidth, innerHeight, margin, height } =
@@ -238,181 +238,240 @@ export function renderTherapeuticAreaChart(
       .attr('fill', colors.textSecondary())
       .text((d, i) => (isCompact && i % 2 === 1 ? '' : formatPeriod(d)));
 
-    // ---------- Period-share strip ----------
-    const stripTop = heatTop + heatHeight + 30;
-    const stripHeight = stripBlockHeight - 20;
+    // ---------- Slope chart: composition shift, 1985–89 vs latest window ----------
+    // TODO(B2): scroll-driven crossfade — replace this static slope with a scroll
+    // morph from heatmap → slope → TA × form fingerprint.
+    const colorByArea = new Map<string, string>();
+    topAreas.forEach((a, i) =>
+      colorByArea.set(a.therapeutic_area, areaPalette[i % areaPalette.length])
+    );
+
+    const slopeBlockTop = heatTop + heatHeight + 56; // generous gap above subtitle
+    const slopeTitleY = margin.top + slopeBlockTop - 30;
+    const slopeTop = slopeBlockTop;
+    const slopeHeight = stripBlockHeight - 18;
+    const slopeBottom = slopeTop + slopeHeight;
 
     svg
       .append('text')
       .attr('x', margin.left)
-      .attr('y', margin.top + stripTop - 14)
+      .attr('y', slopeTitleY)
       .attr('font-size', 11)
       .attr('font-weight', 600)
       .attr('fill', colors.textSecondary())
-      .text('Composition shift — share of approvals per window');
+      .text('Composition shift — share of approvals: first window vs latest');
 
-    const colorByArea = new Map<string, string>();
-    topAreas.forEach((a, i) => colorByArea.set(a.therapeutic_area, areaPalette[i % areaPalette.length]));
-    const otherColor = colors.textTertiary();
+    const earlyPeriod = periodLabels[0];
+    const latePeriod = periodLabels[periodLabels.length - 1];
+    const labelGutter = isCompact ? 92 : 130;
+    const leftAnchor = heatLeft + 56;
+    const rightAnchor = heatRight - labelGutter;
 
-    type StripSeg = { area: string; color: string; share: number; count: number; isOther: boolean };
+    // For each top area, compute share within early and late windows
+    const earlyTotal = periodTotalAll.get(earlyPeriod) ?? 0;
+    const lateTotal = periodTotalAll.get(latePeriod) ?? 0;
 
-    // Build per-period composition (top areas + Other rolled up)
-    const stripData = periodLabels.map((p) => {
-      const total = periodTotalAll.get(p) ?? 0;
-      const segs: StripSeg[] = topAreas.map((a) => {
-        const v = periodLookup.get(`${p}::${a.therapeutic_area}`) ?? 0;
-        return {
-          area: a.therapeutic_area,
-          color: colorByArea.get(a.therapeutic_area) ?? colors.accent(),
-          share: total ? v / total : 0,
-          count: v,
-          isOther: false
-        };
-      });
-      const topSum = segs.reduce((s, x) => s + x.count, 0);
-      const otherCount = Math.max(0, total - topSum);
-      if (otherCount > 0) {
-        segs.push({
-          area: 'Other',
-          color: otherColor,
-          share: total ? otherCount / total : 0,
-          count: otherCount,
-          isOther: true
-        });
-      }
-      return { period: p, total, segs };
+    type SlopeRow = {
+      area: string;
+      color: string;
+      earlyShare: number;
+      lateShare: number;
+      earlyCount: number;
+      lateCount: number;
+      delta: number;
+    };
+    const slopeRows: SlopeRow[] = topAreas.map((a) => {
+      const eC = periodLookup.get(`${earlyPeriod}::${a.therapeutic_area}`) ?? 0;
+      const lC = periodLookup.get(`${latePeriod}::${a.therapeutic_area}`) ?? 0;
+      const eS = earlyTotal ? eC / earlyTotal : 0;
+      const lS = lateTotal ? lC / lateTotal : 0;
+      return {
+        area: a.therapeutic_area,
+        color: colorByArea.get(a.therapeutic_area) ?? colors.accent(),
+        earlyShare: eS,
+        lateShare: lS,
+        earlyCount: eC,
+        lateCount: lC,
+        delta: lS - eS
+      };
     });
 
-    const stripX = scaleBand<string>()
-      .domain(periodLabels)
-      .range([heatLeft, heatRight])
-      .padding(0.18);
-    const stripY = scaleLinear().domain([0, 1]).range([stripTop + stripHeight, stripTop]);
+    const maxShare = Math.max(0.01, ...slopeRows.flatMap((r) => [r.earlyShare, r.lateShare]));
+    const slopeY = scaleLinear().domain([0, maxShare]).range([slopeBottom, slopeTop]);
 
-    const strip = inner.append('g').attr('class', 'ta-strip');
+    const slope = inner.append('g').attr('class', 'ta-slope');
 
-    stripData.forEach((p) => {
-      const colX = stripX(p.period) ?? 0;
-      const colW = stripX.bandwidth();
-      let cum = 0;
-      const colGroup = strip
+    // Anchor period labels (top)
+    slope
+      .append('text')
+      .attr('x', leftAnchor)
+      .attr('y', slopeTop - 12)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', isCompact ? 9 : 10)
+      .attr('font-weight', 600)
+      .attr('fill', colors.textSecondary())
+      .text(formatPeriod(earlyPeriod));
+    slope
+      .append('text')
+      .attr('x', rightAnchor)
+      .attr('y', slopeTop - 12)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', isCompact ? 9 : 10)
+      .attr('font-weight', 600)
+      .attr('fill', colors.textSecondary())
+      .text(formatPeriod(latePeriod));
+
+    // Vertical anchor lines
+    slope
+      .append('line')
+      .attr('x1', leftAnchor)
+      .attr('x2', leftAnchor)
+      .attr('y1', slopeTop)
+      .attr('y2', slopeBottom)
+      .attr('stroke', colors.border())
+      .attr('stroke-dasharray', '2,3');
+    slope
+      .append('line')
+      .attr('x1', rightAnchor)
+      .attr('x2', rightAnchor)
+      .attr('y1', slopeTop)
+      .attr('y2', slopeBottom)
+      .attr('stroke', colors.border())
+      .attr('stroke-dasharray', '2,3');
+
+    // Avoid label overlap on the right by stacking ties
+    const sortedByLate = [...slopeRows].sort((a, b) => b.lateShare - a.lateShare);
+    const minRowGap = isCompact ? 14 : 16;
+    const rightLabelY = new Map<string, number>();
+    sortedByLate.forEach((r) => {
+      let yWanted = slopeY(r.lateShare);
+      // Push down if too close to a previously placed row
+      for (const placedY of rightLabelY.values()) {
+        if (Math.abs(yWanted - placedY) < minRowGap) {
+          yWanted = placedY + minRowGap;
+        }
+      }
+      rightLabelY.set(r.area, yWanted);
+    });
+
+    slopeRows.forEach((r) => {
+      const x1 = leftAnchor;
+      const y1 = slopeY(r.earlyShare);
+      const x2 = rightAnchor;
+      const y2 = slopeY(r.lateShare);
+      const labelY = rightLabelY.get(r.area) ?? y2;
+
+      const g = slope
         .append('g')
-        .attr('data-period', p.period)
+        .attr('data-area', r.area)
         .style('cursor', 'pointer');
 
-      p.segs.forEach((seg) => {
-        const y0 = cum;
-        const y1 = cum + seg.share;
-        cum = y1;
-        const segTop = stripY(y1);
-        const segH = Math.max(0, stripY(y0) - stripY(y1));
-        colGroup
-          .append('rect')
-          .attr('x', colX)
-          .attr('y', segTop)
-          .attr('width', colW)
-          .attr('height', segH)
-          .attr('fill', seg.color)
-          .attr('opacity', seg.isOther ? 0.45 : 0.92);
-      });
+      g.append('line')
+        .attr('x1', x1)
+        .attr('x2', x2)
+        .attr('y1', y1)
+        .attr('y2', y2)
+        .attr('stroke', r.color)
+        .attr('stroke-width', 1.75)
+        .attr('opacity', 0.85);
 
-      // Period label
-      colGroup
-        .append('text')
-        .attr('x', colX + colW / 2)
-        .attr('y', stripY(0) + 12)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', isCompact ? 8 : 9)
-        .attr('fill', colors.textTertiary())
-        .text(formatPeriod(p.period));
+      // Endpoint dots
+      g.append('circle').attr('cx', x1).attr('cy', y1).attr('r', 3.5).attr('fill', r.color);
+      g.append('circle').attr('cx', x2).attr('cy', y2).attr('r', 3.5).attr('fill', r.color);
 
-      // Hit area for hover
-      colGroup
-        .append('rect')
-        .attr('x', colX)
-        .attr('y', stripY(1) - 2)
-        .attr('width', colW)
-        .attr('height', stripHeight + 4)
-        .attr('fill', 'transparent')
-        .on('pointermove', (event) => {
-          const sortedSegs = [...p.segs].sort((a, b) => b.share - a.share);
-          const rows = sortedSegs
-            .filter((s) => s.share > 0)
-            .map(
-              (s) =>
-                `<div class="tip-row"><span><span class="tip-swatch" style="background:${s.color};opacity:${s.isOther ? 0.6 : 1}"></span>${isCompact ? compactAreaLabel(s.area) : s.area}</span><strong>${(s.share * 100).toFixed(0)}%</strong></div>`
-            )
-            .join('');
-          const html = `
-            <div class="tip-title">${formatPeriod(p.period)} — ${fmt(p.total)} approvals</div>
-            ${rows}
-          `;
-          showTooltip(html, event.clientX, event.clientY);
-        })
-        .on('pointerleave', hideTooltip);
-    });
-
-    // Strip color legend (compact, inline). Lay out left-to-right with text-length lookup.
-    const legendY = stripY(1) - 12;
-    const legendItems = topAreas.slice(0, isCompact ? 4 : 6);
-    const legendG = inner.append('g').attr('class', 'ta-legend');
-    let cursor = heatLeft;
-    legendItems.forEach((d) => {
-      const label = isCompact ? compactAreaLabel(d.therapeutic_area) : d.therapeutic_area;
-      const item = legendG.append('g').attr('transform', `translate(${cursor},${legendY})`);
-      item
-        .append('rect')
-        .attr('width', 9)
-        .attr('height', 9)
-        .attr('y', -8)
-        .attr('fill', colorByArea.get(d.therapeutic_area) ?? colors.accent());
-      const text = item
-        .append('text')
-        .attr('x', 13)
-        .attr('y', -1)
-        .attr('font-size', 10)
+      // Left-side share label
+      g.append('text')
+        .attr('x', x1 - 8)
+        .attr('y', y1 + 3)
+        .attr('text-anchor', 'end')
+        .attr('font-size', isCompact ? 9 : 10)
         .attr('fill', colors.textSecondary())
-        .text(label);
-      const w = (text.node() as SVGTextElement | null)?.getComputedTextLength?.() ?? label.length * 6.2;
-      cursor += 13 + w + 18;
-      if (cursor > heatRight - 30) cursor = heatRight - 30;
+        .text(`${(r.earlyShare * 100).toFixed(0)}%`);
+
+      // Right-side area + share, with leader line if pushed off the natural y
+      const arrow = r.delta >= 0 ? '▲' : '▼';
+      const arrowColor = r.delta >= 0 ? r.color : colors.textTertiary();
+      if (Math.abs(labelY - y2) > 1) {
+        g.append('line')
+          .attr('x1', x2 + 4)
+          .attr('x2', x2 + 16)
+          .attr('y1', y2)
+          .attr('y2', labelY)
+          .attr('stroke', r.color)
+          .attr('stroke-width', 0.75)
+          .attr('opacity', 0.55);
+      }
+      const labelText = g
+        .append('text')
+        .attr('x', x2 + 18)
+        .attr('y', labelY + 3)
+        .attr('font-size', isCompact ? 9 : 10)
+        .attr('fill', colors.text());
+      labelText
+        .append('tspan')
+        .attr('font-weight', 600)
+        .text(`${(r.lateShare * 100).toFixed(0)}% `);
+      labelText
+        .append('tspan')
+        .attr('fill', colors.textSecondary())
+        .text(isCompact ? compactAreaLabel(r.area) : r.area);
+      labelText
+        .append('tspan')
+        .attr('dx', 4)
+        .attr('font-size', 9)
+        .attr('fill', arrowColor)
+        .text(`${arrow} ${(Math.abs(r.delta) * 100).toFixed(1)}pt`);
+
+      g.on('pointermove', (event) => {
+        const html = `
+          <div class="tip-title">${r.area}</div>
+          <div class="tip-row"><span>${formatPeriod(earlyPeriod)}</span><strong>${(r.earlyShare * 100).toFixed(1)}% · ${fmt(r.earlyCount)}</strong></div>
+          <div class="tip-row"><span>${formatPeriod(latePeriod)}</span><strong>${(r.lateShare * 100).toFixed(1)}% · ${fmt(r.lateCount)}</strong></div>
+          <div class="tip-row${r.delta >= 0 ? ' is-active' : ''}"><span>Δ share</span><strong>${arrow} ${(Math.abs(r.delta) * 100).toFixed(1)} pts</strong></div>
+        `;
+        showTooltip(html, event.clientX, event.clientY);
+        slope.selectAll<SVGGElement, unknown>('g[data-area]').attr('opacity', function () {
+          return (this as SVGGElement).getAttribute('data-area') === r.area ? 1 : 0.25;
+        });
+      }).on('pointerleave', () => {
+        hideTooltip();
+        slope.selectAll<SVGGElement, unknown>('g[data-area]').attr('opacity', 1);
+      });
     });
 
-    // Intro animation: clip-rect grows the strip from left to right
-    if (!reduced && !introPlayed) {
-      const clipId = `ta-strip-clip-${Math.random().toString(36).slice(2, 8)}`;
-      svg
-        .append('defs')
-        .append('clipPath')
-        .attr('id', clipId)
-        .append('rect')
-        .attr('x', heatLeft)
-        .attr('y', stripY(1) - 4)
-        .attr('width', 0)
-        .attr('height', stripHeight + 8);
-      strip.attr('clip-path', `url(#${clipId})`);
-      const playIntro = () => {
-        if (introPlayed) return;
-        introPlayed = true;
-        svg
-          .select(`#${clipId} rect`)
-          .transition()
-          .duration(1100)
-          .attr('width', heatRight - heatLeft);
-      };
+    // Cancel any previous IO so resize doesn't strand a detached clip.
+    activeIO?.disconnect();
+    activeIO = null;
+
+    // Sweep clip on the slope chart (left → right)
+    const clipId = `ta-slope-clip-${Math.random().toString(36).slice(2, 8)}`;
+    const slopeClipRect = svg
+      .append('defs')
+      .append('clipPath')
+      .attr('id', clipId)
+      .append('rect')
+      .attr('x', leftAnchor - 30)
+      .attr('y', slopeTop - 30)
+      .attr('width', entered || reduced ? rightAnchor + labelGutter + 30 - (leftAnchor - 30) : 0)
+      .attr('height', slopeHeight + 60);
+    slope.attr('clip-path', `url(#${clipId})`);
+
+    if (!reduced && !entered) {
       const io = new IntersectionObserver(
         (entries) => {
-          if (entries.some((e) => e.isIntersecting)) {
-            playIntro();
-            io.disconnect();
-            intersectionCleanup = null;
-          }
+          if (!entries.some((e) => e.isIntersecting)) return;
+          entered = true;
+          io.disconnect();
+          activeIO = null;
+          slopeClipRect
+            .transition()
+            .duration(1300)
+            .attr('width', rightAnchor + labelGutter + 30 - (leftAnchor - 30));
         },
         { threshold: 0.2 }
       );
       io.observe(container);
-      intersectionCleanup = () => io.disconnect();
+      activeIO = io;
     }
 
     svg
@@ -423,13 +482,13 @@ export function renderTherapeuticAreaChart(
       .attr('fill', colors.textTertiary())
       .text(
         isCompact
-          ? 'Heatmap normalized per row. Strip below = composition share per window.'
-          : 'Heatmap cells normalized per row so each area’s shape is comparable. The strip below normalizes each window to 100% to show how the composition of approvals has shifted.'
+          ? 'Heatmap normalized per row. Slope below = first window vs latest.'
+          : 'Heatmap cells normalized per row so each area’s shape is comparable. The slope chart compares each area’s share of approvals in the first window with the latest — crossings are reorderings.'
       );
 
     svg.attr(
       'aria-label',
-      'Therapeutic area heatmap and per-window composition strip showing FDA novel drug approvals across five-year periods.'
+      'Therapeutic area heatmap and slope chart showing FDA novel drug approvals across five-year periods.'
     );
   };
 
@@ -437,7 +496,8 @@ export function renderTherapeuticAreaChart(
   const cleanupResize = onResize(container, draw);
   return () => {
     cleanupResize();
-    intersectionCleanup?.();
+    activeIO?.disconnect();
+    activeIO = null;
     hideTooltip();
   };
 }
